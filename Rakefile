@@ -49,3 +49,20 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+require_relative "lib/erems.rb"
+
+namespace :packages do
+
+  desc "Search for packages and update version"
+  task :scrap_list do
+    e = Erems.new
+    e.scrap_for_packages_text
+  end
+
+  desc "Download Packages and update fields"
+  task :task_name => [:dependent, :tasks] do
+    e = Erems.new
+    e.dowload_package
+  end
+end
