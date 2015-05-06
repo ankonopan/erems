@@ -65,4 +65,19 @@ namespace :packages do
     e = Erems.new
     e.dowload_packages
   end
+
+  desc "Show package info"
+  task :show do
+    if ENV["name"]
+      ap RPackage.where(name: ENV["name"]).first.to_h
+    end
+  end
+
+  desc "Show packages batch info"
+  task :list do
+    if ENV["size"]
+      ap RPackage.not.where(name: nil).limit(ENV["size"].to_i).all.map &:to_h
+    end
+  end
+
 end

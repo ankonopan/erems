@@ -111,5 +111,12 @@ class RPackage
     maintainer.scan(/,?(?<name>.*?)\s<(?<email>[^>]+)>/).inject([]){|m,(name,email)| m << { name: name, email: email } }
   end
 
+  def to_h
+    %w{version title description package date authors maintainers}.inject({}) do |acc,field|
+      acc[field]= send field
+      acc
+    end
+  end
+
 
 end
