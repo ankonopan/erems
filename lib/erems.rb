@@ -59,7 +59,7 @@ class Erems
   end
 
   def dowload_packages
-    group = Workers::TaskGroup.new( pool: Workers.pool.new( size: 60) )
+    group = Workers::TaskGroup.new( pool: Workers::Pool.new( size: 60) )
     RPackage.all.to_a.each do |pac|
       group.add do
         ap "Extracting #{pac.name}"

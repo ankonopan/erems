@@ -61,8 +61,8 @@ namespace :packages do
   end
 
   desc "Download Packages and update fields"
-  task :task_name => [:dependent, :tasks] do
+  task :download do
     e = Erems.new
-    e.dowload_package
+    e.dowload_packages
   end
 end
