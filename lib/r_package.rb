@@ -95,7 +95,7 @@ class RPackage
   end
 
   def update_fields_with_desc( description )
-    extract = %w{version title description package date authors maintainer}
+    extract = %w{version title description package date author authors maintainer maintainers}
     description.select{|key,value| extract.include?(key.to_s.downcase.gsub("/", "_").gsub("-", "_").gsub(/@.*?$/, ""))}.each do |key,value|
       self.send "#{key.downcase.gsub("/", "_").gsub("-", "_").gsub(/@.*?$/, "")}=", value
     end
@@ -106,17 +106,29 @@ class RPackage
     File.delete(file_path)
   end
 
-  def maintainers
-    return [] if maintainer.nil?
-    maintainer.scan(/,?(?<name>.*?)\s<(?<email>[^>]+)>/).inject([]){|m,(name,email)| m << { name: name, email: email } }
-  end
-
   def to_h
-    %w{version title description package date authors maintainers}.inject({}) do |acc,field|
+    %w{version title description package date author authors maintainer maintainers_h}.inject({}) do |acc,field|
       acc[field]= send field
       acc
     end
   end
 
+  def to_json
+    to_h.to_json
+  end
+
+
+  def authors_h
+    pry
+    authors.scan(/person\((?<person>[^\)]*?)\)/).map(&:first)
+  end
+
+  def maintainers_h
+    return [] if maintainer.nil?
+    unless (name = maintainer.match(/(?<name>(\w|\s)*?)$/)[:name]).empty?
+      return [{ name:name, email:"" }]
+    end
+    maintainer.scan(/,?(?<name>[\w\s]*?)\s<(?<email>[^>]+)>/).inject([]){|m,(name,email)| m << { name: name, email: email } }
+  end
 
 end
